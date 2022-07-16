@@ -32,15 +32,17 @@ void windowFullscreenMode(GLFWwindow* window)
 void windowWindowedMode(GLFWwindow* window, int width, int height)
 {
 	//retrive position
-	if (base->getWindowXpos() == 0)
+	if (base->getWindowXpos() == 0 && base->getWindowYpos() == 0)
 	{
 		int32_t xpos, ypos;
 		glfwGetWindowPos(window, &xpos, &ypos);
 		base->setWindowXpos(xpos);
 		base->setWindowYpos(ypos);
 	}
+	int32_t xpos = base->getWindowXpos();
+	int32_t ypos = base->getWindowYpos();
 
-	glfwSetWindowMonitor(window, NULL, base->getWindowXpos(), base->getWindowYpos(), width, height, 0);
+	glfwSetWindowMonitor(window, NULL,xpos ,ypos, width, height, 0);
 }
 
 
@@ -72,7 +74,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 }
 
 
-OpenGLBase::OpenGLBase() 
+OpenGLBase::OpenGLBase() : mXwindowPos(0),mYwindowPos(0)
 {
 	base = this;
 }

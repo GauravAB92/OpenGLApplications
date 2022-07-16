@@ -142,12 +142,16 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="OpenGLBase.cpp" />
     <ClCompile Include="OpenGLUtils.cpp" />
-    <ClCompile Include="TestApplication.cpp" />
+    <ClCompile Include="HelloTriangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OpenGLBase.h" />
     <ClInclude Include="OpenGLUtils.h" />
-    <ClInclude Include="TestApplication.h" />
+    <ClInclude Include="HelloTriangle.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fragment_shader.glsl" />
+    <None Include="vertex_shader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

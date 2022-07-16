@@ -1,4 +1,4 @@
-#include "TestApplication.h"
+#include "HelloTriangle.h"
 #include <iostream>
 
 
@@ -6,7 +6,7 @@
 
 int main(int argc, char** argv)
 {
-	Test app;
+	HelloTriangle app;
 
 
 	if (!app.Initialize())
