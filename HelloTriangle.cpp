@@ -30,21 +30,36 @@ bool HelloTriangle::Initialize()
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-	std::vector<glm::vec3> positions;
+	std::vector<glm::vec3> vertices;
 
 	glm::vec3 left_bottom = glm::vec3(-0.5f, -0.5f, 0.0f);
+	glm::vec3 col1 = glm::vec3(1.0, 0.0, 0.0);
+
 	glm::vec3 right_bottom = glm::vec3(0.5f, -0.5f, 0.0f);
+	glm::vec3 col2 = glm::vec3(0.0, 1.0, 0.0);
+
 	glm::vec3 top = glm::vec3(0.0f, 0.5f, 0.0f);
+	glm::vec3 col3 = glm::vec3(0.0, 0.0, 1.0);
 
-	positions.push_back(left_bottom);
-	positions.push_back(right_bottom);
-	positions.push_back(top);
+	vertices.push_back(left_bottom);
+	vertices.push_back(col1);
+
+	vertices.push_back(right_bottom);
+	vertices.push_back(col2);
+	
+	vertices.push_back(top);
+	vertices.push_back(col3);
 
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * 3, static_cast<void*>(positions.data()), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), static_cast<void*>(vertices.data()), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(sizeof(float)*3));
+	glEnableVertexAttribArray(1);
 
 
 
