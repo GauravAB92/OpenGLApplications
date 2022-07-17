@@ -1,7 +1,7 @@
 #include "Geometry3D.h"
 
 
-Geometry3D::Geometry3D()
+Geometry3D::Geometry3D() : t(0)
 {
 
 }
@@ -34,25 +34,25 @@ bool Geometry3D::Initialize()
 
 
 	//front 
-	glm::vec3 leftTopFront = glm::vec3(-0.5, 0.5, 0.0);
+	glm::vec3 leftTopFront = glm::vec3(-0.5, 0.5, 0.5);
 	glm::vec3 yellow = glm::vec3(1.0, 1.0, 0.0);
 
 	cubeVertices.push_back(leftTopFront);
 	cubeVertices.push_back(yellow);
 
-	glm::vec3 rightTopFront = glm::vec3(0.5, 0.5, 0.0);
+	glm::vec3 rightTopFront = glm::vec3(0.5, 0.5, 0.5);
 	glm::vec3 white = glm::vec3(1.0, 1.0, 1.0);
 
 	cubeVertices.push_back(rightTopFront);
 	cubeVertices.push_back(white);
 
-	glm::vec3 leftBottomFront = glm::vec3(-0.5, -0.5, 0.0);
+	glm::vec3 leftBottomFront = glm::vec3(-0.5, -0.5, 0.5);
 	glm::vec3 green = glm::vec3(0.0, 1.0, 0.0);
 
 	cubeVertices.push_back(leftBottomFront);
 	cubeVertices.push_back(green);
 
-	glm::vec3 rightBottomFront = glm::vec3(0.5, -0.5, 0.0);
+	glm::vec3 rightBottomFront = glm::vec3(0.5, -0.5, 0.5);
 	glm::vec3 cyan = glm::vec3(0.0, 1.0, 1.0);
 
 	cubeVertices.push_back(rightBottomFront);
@@ -148,8 +148,9 @@ bool Geometry3D::Initialize()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
+	glEnable(GL_DEPTH_TEST);
 	
-	glClearColor(1.0, 1.0, 1.0, 0.0); // R G B A
+	glClearColor(0.0,0.0,0.0, 0.0); // R G B A
 	
 
 	OnResize(mClientWindowWidth, mClientWindowHeight);
@@ -159,7 +160,18 @@ bool Geometry3D::Initialize()
 
 void Geometry3D::UpdateFrame()
 {
+	t += 0.1f;
 
+	GLint location = glGetUniformLocation(shaderProgram, "rotationMatrix");
+
+	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(t), glm::vec3(1.0, 1.0, 1.0));
+	
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(rot));
+
+	if (t >= 360.0f)
+	{
+		t = 0.0f;
+	}
 }
 
 void Geometry3D::RenderFrame()
