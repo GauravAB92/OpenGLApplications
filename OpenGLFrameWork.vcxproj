@@ -144,12 +144,15 @@
     <ClCompile Include="OpenGLBase.cpp" />
     <ClCompile Include="OpenGLUtils.cpp" />
     <ClCompile Include="Geometry3D.cpp" />
+    <ClCompile Include="tiny_obj_loader.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="earcut.hpp" />
     <ClInclude Include="OpenGLBase.h" />
     <ClInclude Include="OpenGLUtils.h" />
     <ClInclude Include="Geometry3D.h" />
+    <ClInclude Include="tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment_shader.glsl" />

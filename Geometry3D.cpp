@@ -23,109 +23,84 @@ bool Geometry3D::Initialize()
 
 	//Add data
 
-	GLuint VBO;
-	glGenVertexArrays(1, &mVAO); glGenBuffers(1, &VBO);
+	GLuint VBO[3]; //vertices, normals, texcoords
+	glGenBuffers(3, VBO);
+
+	glGenVertexArrays(1, &mVAO);
 	glBindVertexArray(mVAO);
 
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	//GENERATE DATA
+	//Teapot loading using tiny obj
+	
+	std::vector<tinyobj::shape_t> shapes;
+	std::vector<tinyobj::material_t> materials;
 
-	std::vector<glm::vec3> cubeVertices;
+	std::string warn;
+	std::string err;
+	const char* filename = "./models/untitled.obj";
+	bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filename, "./models/", true);
+
+	//assert proper load
+	assert(ret == true);
+	std::cout << "vertex count: " << attrib.vertices.size() << "\n";
 
 
-	//front 
-	glm::vec3 leftTopFront = glm::vec3(-0.5, 0.5, 0.5);
-	glm::vec3 yellow = glm::vec3(1.0, 1.0, 0.0);
+	//preprocess the mesh
 
-	cubeVertices.push_back(leftTopFront);
-	cubeVertices.push_back(yellow);
+	uint32_t num_indices = shapes[0].mesh.indices.size();
 
-	glm::vec3 rightTopFront = glm::vec3(0.5, 0.5, 0.5);
-	glm::vec3 white = glm::vec3(1.0, 1.0, 1.0);
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> normals;
+	std::vector<glm::vec2> uvs;
 
-	cubeVertices.push_back(rightTopFront);
-	cubeVertices.push_back(white);
 
-	glm::vec3 leftBottomFront = glm::vec3(-0.5, -0.5, 0.5);
-	glm::vec3 green = glm::vec3(0.0, 1.0, 0.0);
+	for (uint32_t i = 0; i < num_indices; i++)
+	{
+		uint32_t vertIndex = shapes[0].mesh.indices[i].vertex_index;
+		uint32_t normIndex = shapes[0].mesh.indices[i].normal_index;
+		uint32_t texcoordIndex = shapes[0].mesh.indices[i].texcoord_index;
 
-	cubeVertices.push_back(leftBottomFront);
-	cubeVertices.push_back(green);
+		float vx = attrib.vertices[vertIndex * 3 + 0];
+		float vy = attrib.vertices[vertIndex * 3 + 1];
+		float vz = attrib.vertices[vertIndex * 3 + 2];
 
-	glm::vec3 rightBottomFront = glm::vec3(0.5, -0.5, 0.5);
-	glm::vec3 cyan = glm::vec3(0.0, 1.0, 1.0);
+		float nx = attrib.normals[normIndex * 3 + 0];
+		float ny = attrib.normals[normIndex * 3 + 1];
+		float nz = attrib.normals[normIndex * 3 + 2];
 
-	cubeVertices.push_back(rightBottomFront);
-	cubeVertices.push_back(cyan);
+		float tx = attrib.texcoords[texcoordIndex * 2 + 0];
+		float ty = attrib.texcoords[texcoordIndex * 2 + 1];
+		
+		vertices.push_back(glm::vec3(vx, vy, vz));
+		normals.push_back(glm::vec3(nx,ny,nz));
+		uvs.push_back(glm::vec2(tx,ty));
 
-	//back 
-	glm::vec3 leftTopBack = glm::vec3(-0.5, 0.5, -0.5);
-	glm::vec3 red = glm::vec3(1.0, 0.0, 0.0);
-	cubeVertices.push_back(leftTopBack);
-	cubeVertices.push_back(red);
+	}
 
-	glm::vec3 rightTopBack = glm::vec3(0.5, 0.5, -0.5);
-	glm::vec3 black = glm::vec3(0.0, 0.0, 0.0);
-
-	cubeVertices.push_back(rightTopBack);
-	cubeVertices.push_back(black);
-
-	glm::vec3 leftBottomBack = glm::vec3(-0.5, -0.5, -0.5);
-	glm::vec3 magenta = glm::vec3(1.0, 0.0, 1.0);
-	cubeVertices.push_back(leftBottomBack);
-	cubeVertices.push_back(magenta);
-
-	glm::vec3 rightBottomBack = glm::vec3(0.5, -0.5, -0.5);
-	glm::vec3 blue = glm::vec3(0.0, 0.0, 1.0);
-	cubeVertices.push_back(rightBottomBack);
-	cubeVertices.push_back(blue);
+	num_vertices = vertices.size();
 
 	
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * cubeVertices.size(), static_cast<void*>(cubeVertices.data()), GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), static_cast<void*>(vertices.data()), GL_STATIC_DRAW);
 
-
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(sizeof(float) * 3));
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * normals.size(), static_cast<void*>(normals.data()), GL_STATIC_DRAW);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
 
 
-	glGenBuffers(1, &mVEO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mVEO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * uvs.size(), static_cast<void*>(uvs.data()), GL_STATIC_DRAW);
 
-	std::vector<uint16_t> indices;
-
-	//front
-	indices.push_back(0);indices.push_back(2);indices.push_back(1); //front left triangle
-	indices.push_back(1); indices.push_back(2); indices.push_back(3); //front right triangle
-
-	//right
-	indices.push_back(1); indices.push_back(3); indices.push_back(5); //right left triangle
-	indices.push_back(5); indices.push_back(3); indices.push_back(7); //right right triangle
-
-	//back
-	indices.push_back(5); indices.push_back(7); indices.push_back(6); //back left triangle
-	indices.push_back(5); indices.push_back(6); indices.push_back(4); //back right triangle
-
-	//left
-	indices.push_back(0); indices.push_back(4); indices.push_back(6); //back left triangle
-	indices.push_back(0); indices.push_back(6); indices.push_back(2); //back right triangle
-
-	//top
-	indices.push_back(5); indices.push_back(4); indices.push_back(0); //back left triangle
-	indices.push_back(5); indices.push_back(0); indices.push_back(1); //back right triangle
-
-	//bottom
-	indices.push_back(3); indices.push_back(2); indices.push_back(6); //back left triangle
-	indices.push_back(3); indices.push_back(6); indices.push_back(7); //back right triangle
-
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * indices.size(), indices.data(),GL_STATIC_DRAW);
-
-
-
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(2);
 
 
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -157,20 +132,22 @@ bool Geometry3D::Initialize()
 void Geometry3D::UpdateFrame()
 {
 	t += 0.1f;
+	cam.updateCamera(mWindow, deltaTime);
 
-	float currentFrame = glfwGetTime();
+
+	float currentFrame = (float)glfwGetTime();
+	
 	deltaTime = currentFrame - lastFrame;
 	lastFrame = currentFrame;
 
-	cam.updateCamera(mWindow, deltaTime);
 
-	GLint model = glGetUniformLocation(shaderProgram, "rotationMatrix");
+	GLint model = glGetUniformLocation(shaderProgram, "modelMatrix");
 	GLint view = glGetUniformLocation(shaderProgram, "viewMatrix");
 	GLint perspective = glGetUniformLocation(shaderProgram, "perspectiveMatrix");
 
-	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(t), glm::vec3(1.0, 1.0, 1.0));
+	glm::mat4 scale = glm::scale(glm::mat4(1.0f),glm::vec3(0.5,0.5,0.5));
 	
-	glUniformMatrix4fv(model, 1, GL_FALSE, glm::value_ptr(rot));
+	glUniformMatrix4fv(model, 1, GL_FALSE, glm::value_ptr(scale));
 	glUniformMatrix4fv(view, 1, GL_FALSE, glm::value_ptr(cam.viewTransform()));
 	glUniformMatrix4fv(perspective, 1, GL_FALSE, glm::value_ptr(cam.perspectiveTransform(mClientWindowWidth,mClientWindowHeight)));
 
@@ -189,11 +166,10 @@ void Geometry3D::RenderFrame()
 	//bind program and data
 	glUseProgram(shaderProgram);
 	glBindVertexArray(mVAO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,mVEO);
-	
-	//initialize the program appropriate primitive to work on
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mVEO);
 
+	//initialize the program appropriate primitive to work on
+	glDrawArrays(GL_TRIANGLES, 0, num_vertices);
 
 }
 
@@ -207,6 +183,27 @@ void Geometry3D::OnResize(int width, int height)
 
 void Geometry3D::OnMouseMove(double xpos, double ypos)
 {
-	cam.mouseMove(xpos, ypos);
 
+	if (cameraFlag == false)
+	{
+		//do nothing
+	}
+	else
+	{
+		cam.mouseMove(xpos, ypos);
+	}
+
+}
+
+
+void Geometry3D::OnCKeyPressed()
+{
+	if (cameraFlag == false)
+	{
+		cameraFlag = true;
+	}
+	else
+	{
+		cameraFlag = false;
+	}
 }

@@ -29,7 +29,6 @@ public:
 	int getDefaultWindowWidth();
 	int getDefaultWindowHeight();
 
-
 	int getWindowXpos();
 	int getWindowYpos();
 	void setWindowXpos(int32_t x);
@@ -40,6 +39,7 @@ public:
 	virtual bool Initialize();
 	virtual void OnResize(int width, int height) {}
 	virtual void OnMouseMove(double xpos, double ypos) {}
+	virtual void OnCKeyPressed() {}
 
 
 protected:

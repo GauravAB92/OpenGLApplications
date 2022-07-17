@@ -1,10 +1,9 @@
 
 #version 460 core
 
-in vec4 fColor;
+in vec4 fNormals;
 
 void main()
 {
-	gl_FragColor = fColor;
-
+	gl_FragColor = fNormals;
 }

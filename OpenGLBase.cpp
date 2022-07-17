@@ -58,10 +58,18 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		windowFullscreenMode(window);
 		
 	}
+	
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
 		windowWindowedMode(window, base->getDefaultWindowWidth(), base->getDefaultWindowHeight());
 	}
+
+	if (key == GLFW_KEY_C && action == GLFW_PRESS)
+	{
+		base->OnCKeyPressed();
+	}
+
+	
 
 }
 

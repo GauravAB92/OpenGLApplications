@@ -10,6 +10,11 @@
 #include "Camera.h"
 
 
+//for robust triangulation
+#define TINYOBJLOADER_USE_MAPBOX_EARCUT 
+#include "tiny_obj_loader.h"
+
+
 class Geometry3D : public OpenGLBase
 {
 public:
@@ -23,8 +28,7 @@ public:
 	virtual bool Initialize() override;
 	virtual void OnResize(int ,int) override;
 	virtual void OnMouseMove(double xpos, double ypos) override;
-
-
+	virtual void OnCKeyPressed() override;
 
 public:
 
@@ -34,10 +38,16 @@ public:
 
 	Camera cam;
 
-	float t; //timer
+	//geometry attributes data
+	tinyobj::attrib_t attrib;
+	uint64_t num_vertices;
+
+	//timer 
+	float t;
 	
 	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
+	bool cameraFlag = false;
 
 };
 
