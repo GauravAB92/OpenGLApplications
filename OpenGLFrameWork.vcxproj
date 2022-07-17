@@ -139,12 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="OpenGLBase.cpp" />
     <ClCompile Include="OpenGLUtils.cpp" />
     <ClCompile Include="Geometry3D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="OpenGLBase.h" />
     <ClInclude Include="OpenGLUtils.h" />
     <ClInclude Include="Geometry3D.h" />

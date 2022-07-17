@@ -1,7 +1,7 @@
 #include "Geometry3D.h"
 
 
-Geometry3D::Geometry3D() : t(0)
+Geometry3D::Geometry3D() : t(0),deltaTime(0),lastFrame(0),mVAO(0),mVEO(0),shaderProgram(0)
 {
 
 }
@@ -82,10 +82,6 @@ bool Geometry3D::Initialize()
 
 	
 
-
-
-
-
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * cubeVertices.size(), static_cast<void*>(cubeVertices.data()), GL_STATIC_DRAW);
 
 
@@ -152,7 +148,7 @@ bool Geometry3D::Initialize()
 	
 	glClearColor(0.0,0.0,0.0, 0.0); // R G B A
 	
-
+	
 	OnResize(mClientWindowWidth, mClientWindowHeight);
 	
 	return true;
@@ -162,11 +158,21 @@ void Geometry3D::UpdateFrame()
 {
 	t += 0.1f;
 
-	GLint location = glGetUniformLocation(shaderProgram, "rotationMatrix");
+	float currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+
+	cam.updateCamera(mWindow, deltaTime);
+
+	GLint model = glGetUniformLocation(shaderProgram, "rotationMatrix");
+	GLint view = glGetUniformLocation(shaderProgram, "viewMatrix");
+	GLint perspective = glGetUniformLocation(shaderProgram, "perspectiveMatrix");
 
 	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), glm::radians(t), glm::vec3(1.0, 1.0, 1.0));
 	
-	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(rot));
+	glUniformMatrix4fv(model, 1, GL_FALSE, glm::value_ptr(rot));
+	glUniformMatrix4fv(view, 1, GL_FALSE, glm::value_ptr(cam.viewTransform()));
+	glUniformMatrix4fv(perspective, 1, GL_FALSE, glm::value_ptr(cam.perspectiveTransform(mClientWindowWidth,mClientWindowHeight)));
 
 	if (t >= 360.0f)
 	{
@@ -198,3 +204,9 @@ void Geometry3D::OnResize(int width, int height)
 }
 
 
+
+void Geometry3D::OnMouseMove(double xpos, double ypos)
+{
+	cam.mouseMove(xpos, ypos);
+
+}

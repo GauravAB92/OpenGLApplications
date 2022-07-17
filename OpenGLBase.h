@@ -26,6 +26,10 @@ public:
 	void CheckGLErrors();
 	int getWindowWidth();
 	int getWindowHeight();
+	int getDefaultWindowWidth();
+	int getDefaultWindowHeight();
+
+
 	int getWindowXpos();
 	int getWindowYpos();
 	void setWindowXpos(int32_t x);
@@ -51,7 +55,11 @@ protected:
 	
 public:
 	int32_t mClientWindowWidth = 1920;
-	int32_t mClientWindowHeight = 1920;
+	int32_t mClientWindowHeight = 1080;
+	
+	int32_t mDefaultClientWindowWidth = 1920;
+	int32_t mDefaultClientWindowHeight = 1080;
+
 	int32_t mXwindowPos ;
 	int32_t mYwindowPos ;
 

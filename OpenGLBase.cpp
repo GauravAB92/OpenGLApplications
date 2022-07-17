@@ -15,15 +15,6 @@ void windowFullscreenMode(GLFWwindow* window)
 
 	GLFWmonitor* currentMonitor = glfwGetWindowMonitor(window);
 
-	////check if fullscreen or widowed mode
-	////if windowed turn to fullscreen
-
-	//retrive position
-	int32_t xpos, ypos;
-	glfwGetWindowPos(window, &xpos, &ypos);
-	base->setWindowXpos(xpos);
-	base->setWindowYpos(ypos);
-
 	glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
 	
 }
@@ -31,16 +22,14 @@ void windowFullscreenMode(GLFWwindow* window)
 
 void windowWindowedMode(GLFWwindow* window, int width, int height)
 {
-	//retrive position
-	if (base->getWindowXpos() == 0 && base->getWindowYpos() == 0)
-	{
-		int32_t xpos, ypos;
-		glfwGetWindowPos(window, &xpos, &ypos);
-		base->setWindowXpos(xpos);
-		base->setWindowYpos(ypos);
-	}
-	int32_t xpos = base->getWindowXpos();
-	int32_t ypos = base->getWindowYpos();
+
+
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	
+	int xpos = mode->width / 4;
+	int ypos = mode->height / 8;
+
 
 	glfwSetWindowMonitor(window, NULL,xpos ,ypos, width, height, 0);
 }
@@ -50,6 +39,9 @@ void windowWindowedMode(GLFWwindow* window, int width, int height)
 
 void resize(GLFWwindow* window, int width, int height)
 {
+	base->mClientWindowWidth = width;
+	base->mClientWindowHeight = height;
+
 	base->OnResize(width, height);
 }
 
@@ -68,7 +60,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
-		windowWindowedMode(window, base->getWindowWidth(), base->getWindowHeight());
+		windowWindowedMode(window, base->getDefaultWindowWidth(), base->getDefaultWindowHeight());
 	}
 
 }
@@ -212,6 +204,18 @@ int OpenGLBase::getWindowHeight()
 {
 	return mClientWindowHeight;
 }
+
+int OpenGLBase::getDefaultWindowWidth()
+{
+	return mDefaultClientWindowWidth;
+}
+
+int OpenGLBase::getDefaultWindowHeight()
+{
+	return mDefaultClientWindowHeight;
+}
+
+
 
 int  OpenGLBase :: getWindowXpos()
 {
