@@ -7,12 +7,12 @@
 #include "glm/glm.hpp"
 
 
-class HelloTriangle : public OpenGLBase
+class Geometry3D : public OpenGLBase
 {
 public:
 
-	HelloTriangle();
-	~HelloTriangle();
+	Geometry3D();
+	~Geometry3D();
 	
 	virtual void RenderFrame() override;
 	virtual void UpdateFrame() override;
@@ -24,9 +24,9 @@ public:
 
 public:
 
-	//triangle positions
-	GLuint mVAO;
-	GLuint shaderProgram;
+	GLuint mVAO;	//vertex array object
+	GLuint mVEO;	//index buffer
+	GLuint shaderProgram; 
 
 	
 };

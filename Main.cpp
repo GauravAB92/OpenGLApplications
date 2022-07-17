@@ -1,4 +1,4 @@
-#include "HelloTriangle.h"
+#include "Geometry3D.h"
 #include <iostream>
 
 
@@ -6,7 +6,7 @@
 
 int main(int argc, char** argv)
 {
-	HelloTriangle app;
+	Geometry3D app;
 
 
 	if (!app.Initialize())

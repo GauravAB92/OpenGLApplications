@@ -24,7 +24,7 @@
     <ClCompile Include="OpenGLUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HelloTriangle.cpp">
+    <ClCompile Include="Geometry3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,7 +35,7 @@
     <ClInclude Include="OpenGLUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HelloTriangle.h">
+    <ClInclude Include="Geometry3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

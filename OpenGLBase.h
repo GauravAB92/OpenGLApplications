@@ -51,7 +51,7 @@ protected:
 	
 public:
 	int32_t mClientWindowWidth = 1920;
-	int32_t mClientWindowHeight = 1080;
+	int32_t mClientWindowHeight = 1920;
 	int32_t mXwindowPos ;
 	int32_t mYwindowPos ;
 
